@@ -13,7 +13,11 @@ const movieSchema = z.object({
   }),
   genre: z.array(
     z.enum(['Action', 'Adventure', 'Comedy', 'Drama', 'Terror', 'Sci-Fi', 'Romance', 'Crime'])
-  )
+  ),
+  rate: z.number({
+    invalid_type_error: 'Rate must be a number',
+    required_error: 'Rate is required'
+  }).min(0).max(10)
 })
 
 export function validateMovie (object) {

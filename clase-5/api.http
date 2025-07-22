@@ -5,7 +5,7 @@ GET http://localhost:1234/movies
 GET http://localhost:1234/movies?genre=Action
 
 ### * Recuperar una película por ID
-GET http://localhost:1234/movies/c8a7d63f-3b04-44d3-9d95-8782fd7dcfaf
+GET http://localhost:1234/movies/04986507-b3ed-442c-8ae7-4c5df804f896
 
 ### * Crear una pelicula 
 POST http://localhost:1234/movies
@@ -20,17 +20,18 @@ Content-Type: application/json
   "genre": [
     "Crime", 
     "Drama"
-    ]
+    ],
+    "rate": 8.3
 }
 
 ### * Borrar una pelicula
-DELETE http://localhost:1234/movies/828038a2-6247-478f-a871-0638e6065264
+DELETE http://localhost:1234/movies/04986507-b3ed-442c-8ae7-4c5df804f896
 
 
 ### * Actualizar una película
-PATCH http://localhost:1234/movies/828038a2-6247-478f-a871-0638e6065264
+PATCH http://localhost:1234/movies/04986507-b3ed-442c-8ae7-4c5df804f896
 Content-Type: application/json
 
 {
-  "title": "Prueba 2"
+  "year": 2012
 }

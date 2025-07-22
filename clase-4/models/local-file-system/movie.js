@@ -1,9 +1,10 @@
 import { randomUUID } from 'node:crypto'
-import movies from '../movies.json' with { type: 'json' }
+import movies from '../../movies.json' with { type: 'json' }
+import { moviesRouter } from '../../routes/movies.js'
 export class movieModel {
     static async getAll ({genre}) {
         if(genre){
-            return moviesRouter.filter(
+            return movies.filter(
                 movie => movie.genre.some(g => g.toLowerCase() === genre.toLowerCase())
             )
         }
@@ -21,9 +22,7 @@ export class movieModel {
             ...input
           }
 
-
           movies.push(newMovie)
-
 
           return newMovie
     }
