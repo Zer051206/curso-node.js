@@ -1,6 +1,7 @@
 import express, { json } from 'express'
-import { moviesRouter } from './routes/movies.js'
+import { createMovieRouter } from './routes/movies.js'
 import { corsMiddleware } from './middlewares/cors.js'
+
 
 // ? Como leer en ESModules
 // ? 1. Como deberia hacerse:
@@ -25,14 +26,18 @@ import movies from './movies.json' with { type: 'json' }
 
 // ? CORS PRE-Flight: AL HACER UNA PETICIÓN COMPLEJA REQUIERE UNA PETICIÓN ESPECIAL LLAMADA OPTIONS
 
-const app = express()
-app.use(json())
-app.use(corsMiddleware())
-app.disable('x-powered-by')
-app.use('/movies', moviesRouter)
+export const createApp = ({ movieModel }) => {
+  const app = express()
+  app.use(json())
+  app.use(corsMiddleware())
+  app.disable('x-powered-by')
+  app.use('/movies', createMovieRouter({ movieModel }))
 
-const PORT = process.env.PORT || 1234
+  const PORT = process.env.PORT || 1234
 
-app.listen(PORT, () => {
-  console.log(`server is listening on port http://localhost:${PORT}`)
-})
+  app.listen(PORT, () => {
+    console.log(`server is listening on port http://localhost:${PORT}`)
+  })
+}
+
+

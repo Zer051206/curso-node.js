@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise'
 
-const config = { 
+const DEFAULT_CONFIG = { 
   host: 'localhost',
   user: 'root', 
   port: 3306,
@@ -8,47 +8,47 @@ const config = {
   database: 'moviesdb'
 }
 
-const connect = await mysql.createConnection(config)
+const connect = createClient(DEFAULT_CONFIG)
 
-export class movieModel {
-  static async getAll ({ genre }) {
-  if (genre) {
-    const lowerCaseGenre = genre.toLowerCase();
+export class MovieModel {
+  async getAll ({ genre }) {
+    if (genre) {
+      const lowerCaseGenre = genre.toLowerCase();
 
-    const [genres] = await connect.query(
-      'SELECT id, name FROM genre WHERE LOWER(name) = ?;',
-      [lowerCaseGenre]
-    );
+      const [genres] = await connect.query(
+        'SELECT id, name FROM genre WHERE LOWER(name) = ?;',
+        [lowerCaseGenre]
+      );
 
-    if (genres.length === 0) return [];
+      if (genres.length === 0) return [];
 
-    const [{ id }] = genres;
+      const [{ id }] = genres;
 
-    const [movies] = await connect.query(
-      'SELECT m.id, m.title, m.year, m.director, m.duration, m.poster, m.rate, ' +
-      "GROUP_CONCAT(g.name SEPARATOR ',') as generos " +
-      'FROM movie m ' +
-      'JOIN movie_genres me ON me.movie_id = m.id ' +
-      'JOIN genre g ON g.id = me.genre_id ' +
-      'WHERE EXISTS (SELECT 1 FROM movie_genres mg2 WHERE mg2.movie_id = m.id AND mg2.genre_id = ?)' +
-      'GROUP BY m.id;', [id] 
-    );
+      const [movies] = await connect.query(
+        'SELECT m.id, m.title, m.year, m.director, m.duration, m.poster, m.rate, ' +
+        "GROUP_CONCAT(g.name SEPARATOR ',') as generos " +
+        'FROM movie m ' +
+        'JOIN movie_genres me ON me.movie_id = m.id ' +
+        'JOIN genre g ON g.id = me.genre_id ' +
+        'WHERE EXISTS (SELECT 1 FROM movie_genres mg2 WHERE mg2.movie_id = m.id AND mg2.genre_id = ?)' +
+        'GROUP BY m.id;', [id] 
+      );
 
-    return movies;
-  } else {
-    const [movies] = await connect.query(
-      'SELECT m.id, m.title, m.year, m.director, m.duration, m.poster, m.rate, ' +
-      "GROUP_CONCAT(g.name SEPARATOR ',') as generos " + 
-      'FROM movie m ' +
-      'JOIN movie_genres me ON me.movie_id = m.id ' +
-      'JOIN genre g ON g.id = me.genre_id ' +
-      'GROUP BY m.id;'
-    );
-    return movies;
-  }
+      return movies;
+    } else {
+      const [movies] = await connect.query(
+        'SELECT m.id, m.title, m.year, m.director, m.duration, m.poster, m.rate, ' +
+        "GROUP_CONCAT(g.name SEPARATOR ',') as generos " + 
+        'FROM movie m ' +
+        'JOIN movie_genres me ON me.movie_id = m.id ' +
+        'JOIN genre g ON g.id = me.genre_id ' +
+        'GROUP BY m.id;'
+      );
+      return movies;
+    }
 }
 
-  static async getById ({ id }) {
+  async getById ({ id }) {
     const [movies] = await connect.query(
       `SELECT id, title, year, director, duration, poster, rate FROM movie WHERE id=?;`, [id]
     )
@@ -58,8 +58,7 @@ export class movieModel {
     return movies[0]
   }
 
-  static async create ({ input }) {
-    // Desestructuramos los campos del input.
+  async create ({ input }) {
     const {
       title,
       year,
@@ -140,7 +139,7 @@ export class movieModel {
   }
 
   
-  static async delete ({ id }) {
+  async delete ({ id }) {
     try{
       await connect.query(
         `DELETE  FROM movie WHERE id = ?;`, [id]
@@ -150,7 +149,7 @@ export class movieModel {
     }
   }
 
-  static async update ({ id, input }) {
+  async update ({ id, input }) {
     const sets = []
     const values = []
 

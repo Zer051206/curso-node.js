@@ -246,6 +246,8 @@
     "extends": "standard"
   },
   "scripts": {
+    "start:mysql": "node --watch server-with-mysql.js",
+    "start:local": "node --watch server-with-local.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev: 1": "node --watch 3.express.js"
   },

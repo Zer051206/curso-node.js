@@ -1,8 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import movies from '../../movies.json' with { type: 'json' }
-import { moviesRouter } from '../../routes/movies.js'
-export class movieModel {
-    static async getAll ({genre}) {
+export class MovieModel {
+    async getAll ({genre}) {
         if(genre){
             return movies.filter(
                 movie => movie.genre.some(g => g.toLowerCase() === genre.toLowerCase())
@@ -11,12 +10,12 @@ export class movieModel {
         return movies
     }
 
-    static async getByID ({ id }) {
+    async getByID ({ id }) {
         const movie = movies.find(movie => movie.id === id)
         return movie
     }
 
-    static async create ({ input }) {
+    async create ({ input }) {
         const newMovie = {
             id: randomUUID(),
             ...input
@@ -27,7 +26,7 @@ export class movieModel {
           return newMovie
     }
 
-    static async delete ({ id }) {
+    async delete ({ id }) {
         const movieIndex = movies.findIndex(movie => movie.id === id)
         if (movieIndex === -1) return false
 
@@ -35,7 +34,7 @@ export class movieModel {
          return true
     }
 
-    static async update ({ id, input }) {
+    async update ({ id, input }) {
         const movieIndex = movies.findIndex(movie => movie.id === id)
 
         if (movieIndex === -1) return false
