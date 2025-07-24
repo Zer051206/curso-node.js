@@ -5,11 +5,11 @@ export class MovieController {
     this.movieModel = movieModel
   }
 
-    getAll = async (req, res) => {
-      const { genre } = req.query
-      const movies = await this.movieModel.getAll({ genre })
-      // ? Què es lo que renderiza
-      res.json(movies)
+  getAll = async (req, res) => {
+    const { genre } = req.query
+    const movies = await this.movieModel.getAll({ genre })
+    // ? Què es lo que renderiza
+    res.json(movies)
   }
 
   getById = async (req, res) => {
